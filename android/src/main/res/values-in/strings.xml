@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tack_camera">Kamera</string>
+    <string name="tack_picture">Gambar</string>
+    <string name="turn_on_notify">Aktifkan pemberitahuan push</string>
+    <string name="open_notify_message">Buka \"pemberitahuan \" untuk informasi terbaru</string>
+    <string name="cancel">Membatalkan</string>
+    <string name="ok">baik</string>
+</resources>

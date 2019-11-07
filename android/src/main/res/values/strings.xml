@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tack_camera">Camera</string>
+    <string name="tack_picture">Picture</string>
+    <string name="turn_on_notify">Turn on push notifications</string>
+    <string name="open_notify_message">Open \"notifications\" for the latest information</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+</resources>

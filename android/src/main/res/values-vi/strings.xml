@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tack_camera">Camera</string>
-    <string name="tack_picture">Picture</string>
-    <string name="turn_on_notify">Turn on push notifications</string>
-    <string name="open_notify_message">Open \"notifications\" for the latest information</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
+    <string name="tack_camera">Máy ảnh</string>
+    <string name="tack_picture">Hình ảnh</string>
+    <string name="turn_on_notify">Bật thông báo đẩy</string>
+    <string name="open_notify_message">Mở \"thông báo\" để biết thông tin mới nhất</string>
+    <string name="cancel">Hủy bỏ</string>
+    <string name="ok">đồng ý</string>
 </resources>
