@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <paths>
+        <cache-path name="cache_dirs" path="." />
+        <external-path path="" name="Download"/>
+    </paths>
+</resources>

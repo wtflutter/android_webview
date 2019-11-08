@@ -8,8 +8,10 @@ import android.provider.DocumentsContract
 import android.content.ContentUris
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.support.v4.content.FileProvider
 
 
 object FileUtil {
@@ -19,6 +21,25 @@ object FileUtil {
         return Environment.getExternalStorageDirectory().absolutePath + "/Download/"
     }
 
+    fun getFileName(context: Context, id: Int): String {
+        return "${MD5.encode(context.packageName)}-$id.apk"
+    }
+
+
+    fun installAPk(context: Context,file: File) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive")
+        } else {
+            // 第二个参数，即第一步中配置的authorities
+            val contentUri = FileProvider.getUriForFile(context, "com.wttec.android_webview.fileprovider", file)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive")
+        }
+        context.startActivity(intent)
+    }
     /**
      * 根据URI获取文件真实路径（兼容多张机型）
      * @param context

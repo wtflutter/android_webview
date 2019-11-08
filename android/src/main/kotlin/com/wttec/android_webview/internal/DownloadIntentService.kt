@@ -15,6 +15,7 @@ import android.support.v4.content.FileProvider
 import android.util.Log
 import com.wttec.android_webview.R
 import com.wttec.android_webview.utils.FileUtil
+import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -42,18 +43,29 @@ class DownloadIntentService : IntentService("download") {
     private var mDownloadUrl = ""
     private var contentTitle = ""
     private var ticker = ""
-
+    private var notInstall = false
+    private var id = 0;
     override fun onCreate() {
         super.onCreate()
     }
 
     companion object {
         @JvmStatic
-        fun openMe(activity: Activity,downloadUrl:String,contentTitle:String,ticker:String){
+        fun openMe(activity: Context, downloadUrl: String, contentTitle: String, ticker: String) {
             val intent = Intent(activity, DownloadIntentService::class.java)
             intent.putExtra("downloadUrl", downloadUrl)
             intent.putExtra("contentTitle", contentTitle)
             intent.putExtra("ticker", ticker)
+            activity.startService(intent)
+        }
+
+        @JvmStatic
+        fun openMe2(activity: Context, downloadUrl: String, contentTitle: String, id: Int) {
+            val intent = Intent(activity, DownloadIntentService::class.java)
+            intent.putExtra("downloadUrl", downloadUrl)
+            intent.putExtra("contentTitle", contentTitle)
+            intent.putExtra("ticker", "")
+            intent.putExtra("id", id)
             activity.startService(intent)
         }
     }
@@ -63,6 +75,7 @@ class DownloadIntentService : IntentService("download") {
         mDownloadUrl = intent.getStringExtra("downloadUrl")
         contentTitle = intent.getStringExtra("contentTitle")
         ticker = intent.getStringExtra("ticker")
+        id = intent.getIntExtra("id", 0)
         initNotify()
         startDownload()
     }
@@ -106,8 +119,11 @@ class DownloadIntentService : IntentService("download") {
                 oldProgress = progress
                 byteRead = input.read(buffer)
             }
-
-            installAPk(rename())
+            if (id != 0) {
+                rename(id)
+            } else {
+                FileUtil.installAPk(this, rename())
+            }
         } catch (e: Exception) {
             Log.e("Exception", "download apk file error:" + e.message)
         } finally {
@@ -131,29 +147,24 @@ class DownloadIntentService : IntentService("download") {
 
     }
 
-    private fun rename() :File{
+    private fun rename(id: Int): File {
+        val path = FileUtil.getDownloadPath()
+        val old = File(path + TMP_NAME)
+        val new = File(path + FileUtil.getFileName(this, id))
+        if (new.exists()) new.delete()
+        if (old.exists()) old.renameTo(new)
+        return new
+    }
+
+    private fun rename(): File {
         val path = FileUtil.getDownloadPath()
         val old = File(path + TMP_NAME)
         val new = File(path + APK_FILE_NAME)
         if (new.exists()) new.delete()
         if (old.exists()) old.renameTo(new)
-        return new;
+        return new
     }
 
-    private fun installAPk(file: File) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive")
-        } else {
-            // 第二个参数，即第一步中配置的authorities
-            val contentUri = FileProvider.getUriForFile(this, "$packageName.fileProvider", file)
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            intent.setDataAndType(contentUri, "application/vnd.android.package-archive")
-        }
-        startActivity(intent)
-    }
 
     /**
      * 更新通知栏的进度(下载中)
@@ -161,7 +172,8 @@ class DownloadIntentService : IntentService("download") {
      * @param progress
      */
     private fun updateProgress(progress: Int) {
-        mBuilder.setContentText(String.format("downloading...%1\$d%%", progress)).setProgress(100, progress, false)
+        if (id != 0) EventBus.getDefault().post(MessageEvent(id, progress))
+        mBuilder.setContentText(String.format("%1\$d%%", progress)).setProgress(100, progress, false)
         val pendingintent = PendingIntent.getActivity(this, 0, Intent(), PendingIntent
                 .FLAG_UPDATE_CURRENT)
         mBuilder.setContentIntent(pendingintent)
@@ -226,7 +238,7 @@ class DownloadIntentService : IntentService("download") {
     }
 
     private val APK_FILE_NAME = "${System.currentTimeMillis()}.apk"
-    private val TMP_NAME = "update.tmp"
+    private val TMP_NAME = "${System.currentTimeMillis()}-update.tmp"
 
     /**
      * 获取App的Icon

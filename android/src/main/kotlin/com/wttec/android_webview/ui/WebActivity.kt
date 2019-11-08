@@ -24,17 +24,12 @@ import android.widget.Toast
 import com.wttec.android_webview.AndroidWebviewPlugin
 import com.wttec.android_webview.R
 import com.wttec.android_webview.internal.DownloadIntentService
-import com.wttec.android_webview.utils.WebViewUtil
 import com.wttec.android_webview.utils.checkPermissions
 import java.io.File
 import java.net.URISyntaxException
 import kotlinx.android.synthetic.main.fw_activity_web.*
 import kotlinx.android.synthetic.main.fw_web_layout.*
-/**
- * Date:       2019/3/20
- * Author:     Su Xing
- * Describe:
- */
+
 class WebActivity : AppCompatActivity() {
     private var uploadMessage: ValueCallback<Uri>? = null
     private var uploadMessageAboveL: ValueCallback<Array<Uri>>? = null
@@ -66,7 +61,6 @@ class WebActivity : AppCompatActivity() {
         webSettings.databaseEnabled = true//
         webSettings.domStorageEnabled = true
         webView!!.keepScreenOn = true
-        WebViewUtil.addJsBridge(webView)
         webView!!.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(view: WebView, title: String) {
                 super.onReceivedTitle(view, title)
@@ -96,7 +90,6 @@ class WebActivity : AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
-                WebViewUtil.initContactScript(webView)
                 progressBar.visibility = View.GONE
             }
 

@@ -13,12 +13,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  static const EventChannel eventChannel = const EventChannel("com.wttec.android_webview/event");
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
     initCallback();
+    eventChannel.receiveBroadcastStream().listen((obj) {
+      print("event:$obj");
+    });
   }
 
   void initCallback() {
@@ -55,7 +59,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Row(
+        body: Column(
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(30),
@@ -86,6 +90,22 @@ class _MyAppState extends State<MyApp> {
                   color: Colors.lightBlue,
                   child: Center(
                     child: Text("toke"),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(30),
+              child: GestureDetector(
+                onTap: () async {
+                  await AndroidWebview.toWeb("豌豆荚", 4, 1, "https://ucan.25pp.com/Wandoujia_web_seo_baidu_homepage.apk");
+                },
+                child: Container(
+                  height: 44,
+                  width: 100,
+                  color: Colors.lightBlue,
+                  child: Center(
+                    child: Text("下载"),
                   ),
                 ),
               ),
