@@ -8,7 +8,7 @@ import android.provider.MediaStore
 
 object PictureUtil {
     fun openPicture(activity: Activity, callback: (String?) -> Unit) {
-        activity.checkPermissions(arrayOf(Manifest.permission_group.STORAGE)) {
+        activity.checkPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             if (it) {
                 val f = getFragment(activity)
                 f.callback = callback

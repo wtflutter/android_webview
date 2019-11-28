@@ -136,10 +136,6 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
-            "login" -> FirebaseUtil.login(activity) {
-                result.success(it)
-            }
-            "logout" -> FirebaseUtil.logout()
             "toWeb" -> toWebAction(call)
             "version" -> result.success(activity.versionName())
             "token" -> activity.getToken {
@@ -159,6 +155,18 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
                 val id = call.arguments as Int
                 val file = File(FileUtil.getDownloadPath() + FileUtil.getFileName(activity, id))
                 FileUtil.installAPk(activity, file)
+            }
+            "encrypt" -> {
+                val map = call.arguments as Map<*, *>
+                val key = map["key"] as String
+                val data = map["data"] as String
+                result.success(AesUtil.encode(key, data))
+            }
+            "decrypt" -> {
+                val map = call.arguments as Map<*, *>
+                val key = map["key"] as String
+                val data = map["data"] as String
+                result.success(AesUtil.decode(key, data))
             }
             else -> result.notImplemented()
         }

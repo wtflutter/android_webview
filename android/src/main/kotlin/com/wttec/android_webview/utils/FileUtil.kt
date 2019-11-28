@@ -26,7 +26,7 @@ object FileUtil {
     }
 
 
-    fun installAPk(context: Context,file: File) {
+    fun installAPk(context: Context, file: File) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
@@ -34,12 +34,13 @@ object FileUtil {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive")
         } else {
             // 第二个参数，即第一步中配置的authorities
-            val contentUri = FileProvider.getUriForFile(context, "com.wttec.android_webview.fileprovider", file)
+            val contentUri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive")
         }
         context.startActivity(intent)
     }
+
     /**
      * 根据URI获取文件真实路径（兼容多张机型）
      * @param context
