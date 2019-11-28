@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -25,10 +26,10 @@ import com.wttec.android_webview.AndroidWebviewPlugin
 import com.wttec.android_webview.R
 import com.wttec.android_webview.internal.DownloadIntentService
 import com.wttec.android_webview.utils.checkPermissions
-import java.io.File
-import java.net.URISyntaxException
 import kotlinx.android.synthetic.main.fw_activity_web.*
 import kotlinx.android.synthetic.main.fw_web_layout.*
+import java.io.File
+import java.net.URISyntaxException
 
 class WebActivity : AppCompatActivity() {
     private var uploadMessage: ValueCallback<Uri>? = null
@@ -43,7 +44,7 @@ class WebActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        val drawable = ClipDrawable(ColorDrawable(resources.getColor(R.color.colorPrimary)), Gravity.START, ClipDrawable.HORIZONTAL)
+        val drawable = ClipDrawable(ColorDrawable(Color.BLACK), Gravity.START, ClipDrawable.HORIZONTAL)
         progressBar!!.progressDrawable = drawable
         iv_finish.setOnClickListener { finish() }
     }
