@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.firebase.iid.FirebaseInstanceId
 import com.yanzhenjie.permission.AndPermission
 import kotlin.reflect.KClass
 
@@ -108,17 +106,4 @@ fun Context.checkPermissions(permissions: Array<String>, callback: (Boolean) -> 
         }.onDenied {
             callback(false)
         }.start()
-}
-
-fun Context.getToken(callback:(Map<String,Any>)->Unit) {
-    if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) != 0) return
-    FirebaseInstanceId.getInstance()
-            .instanceId
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    it.result?.token?.apply {
-                        callback(deviceParams(this))
-                    }
-                }
-            }
 }

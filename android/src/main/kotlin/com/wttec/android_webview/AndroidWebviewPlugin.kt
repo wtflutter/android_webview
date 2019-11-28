@@ -137,11 +137,7 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
             "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
             "toWeb" -> toWebAction(call)
             "version" -> result.success(activity.versionName())
-            "token" -> activity.getToken {
-                //获取token参数
-                activity.initPush()
-                result.success(it)
-            }
+
             "openPicture" -> PictureUtil.openPicture(activity) {
                 result.success(it)
             }
