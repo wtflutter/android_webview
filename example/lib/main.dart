@@ -23,6 +23,13 @@ class _MyAppState extends State<MyApp> {
     eventChannel.receiveBroadcastStream().listen((obj) {
       print("event:$obj");
     });
+    _saveToken();
+  }
+
+  void _saveToken() async {
+    var token = await AndroidWebview.tokenMap;
+    print("-------token---------");
+    print(token);
   }
 
   void initCallback() {

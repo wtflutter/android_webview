@@ -23,6 +23,14 @@ class AndroidWebview {
     _channel.invokeMethod("toWeb", {"url": url, "openType": type, "name": name, "id": id});
   }
 
+  static Future<String> encrypt(String key, String data) {
+    return _channel.invokeMethod("encrypt", {"key": key, "data": data});
+  }
+
+  static Future<String> decrypt(String key, String data) {
+    return _channel.invokeMethod("decrypt", {"key": key, "data": data});
+  }
+
   static Future<Map<String, dynamic>> get tokenMap async {
     return getMap("token");
   }

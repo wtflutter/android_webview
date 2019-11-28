@@ -1,3 +1,15 @@
+## 0.1.4
+
+* fix open picture bug
+
+## 0.1.3
+
+* REMOVE AF
+
+## 0.1.2
+
+* AES
+
 ## 0.1.1
 
 *
