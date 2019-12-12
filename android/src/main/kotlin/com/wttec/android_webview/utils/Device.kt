@@ -2,17 +2,11 @@ package com.wttec.android_webview.utils
 
 import android.content.Context
 import android.os.Build
-import android.preference.PreferenceManager
 import android.provider.Settings
 
-fun Context.initPush() {
-    NotificationUtil.checkNotification(this)
-}
-
-fun Context.deviceParams(token: String):Map<String,Any> {
+fun Context.deviceParams():Map<String,Any> {
     val hashMap = HashMap<String, Any>()
     val uuid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-    val referrer = PreferenceManager.getDefaultSharedPreferences(this).getString("referrer", "")
     hashMap["uuid"] = uuid
     hashMap["mobile_operator"] = 4
     hashMap["wifi_name"] = CommonUtil.getWifiName(this)
@@ -25,8 +19,6 @@ fun Context.deviceParams(token: String):Map<String,Any> {
     hashMap["js_version"] = versionName()
     hashMap["opportunity"] = 1
     hashMap["device_name"] = Build.MODEL
-    hashMap["token"] = token
-    hashMap["topic"] = referrer
     return hashMap
 }
 

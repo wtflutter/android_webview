@@ -1,3 +1,11 @@
+## 0.1.6
+
+* bug fix.
+
+## 0.1.5
+
+* remove unused g service.
+
 ## 0.1.4
 
 * fix open picture bug

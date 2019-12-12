@@ -68,7 +68,6 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
             EventChannel(registrar.messenger(), "com.wttec.android_webview/event")
                     .setStreamHandler(object : EventChannel.StreamHandler {
                         override fun onListen(p0: Any?, p1: EventChannel.EventSink?) {
-                            Log.e("plugin", "listen....")
                             eventSink = p1
                         }
 
@@ -137,7 +136,7 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
             "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
             "toWeb" -> toWebAction(call)
             "version" -> result.success(activity.versionName())
-
+            "deviceInfo" -> result.success(activity.deviceParams())
             "openPicture" -> PictureUtil.openPicture(activity) {
                 result.success(it)
             }
@@ -162,6 +161,10 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
                 val key = map["key"] as String
                 val data = map["data"] as String
                 result.success(AesUtil.decode(key, data))
+            }
+            "toast" -> {
+                val msg = call.arguments as String
+                Toast.makeText(activity.applicationContext, msg, Toast.LENGTH_SHORT).show();
             }
             else -> result.notImplemented()
         }

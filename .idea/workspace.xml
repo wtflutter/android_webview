@@ -10,15 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a9492b7-129e-422f-a18d-7b840778da2b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/AesUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/AndroidWebviewPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/AndroidWebviewPlugin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/FileUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/FileUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/PictureUtil.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/PictureUtil.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/Device.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/Device.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/NotificationUtil.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/res/layout/fw_dialog_notification.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/android_webview.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/android_webview.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
@@ -40,28 +39,34 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/PictureUtil.kt">
+        <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/PictureFragment.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pubspec.yaml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="3" column="40" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="40" />
+            <state relative-caret-position="180">
+              <caret line="11" column="48" selection-start-line="11" selection-start-column="48" selection-end-line="11" selection-end-column="48" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/CommonUtil.java">
+        <entry file="file://$PROJECT_DIR$/lib/android_webview.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+            <state relative-caret-position="143">
+              <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
+              <folding>
+                <element signature="e#0#20#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/AndroidWebviewPlugin.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="208">
+              <caret line="70" selection-start-line="70" selection-end-line="70" />
+              <folding>
+                <element signature="e#0#1325#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -70,7 +75,7 @@
         <entry file="file://$PROJECT_DIR$/CHANGELOG.md">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="36">
-              <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+              <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -131,6 +136,7 @@
     <findStrings>
       <find>com.wttec.android_webview</find>
       <find>AndroidWebviewPlugin.channel?.invokeMethod(</find>
+      <find>listen...</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -152,13 +158,13 @@
         <option value="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/internal/DownloanReceiver.java" />
         <option value="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/internal/DownLoadReceiver.java" />
         <option value="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/AesUtil.java" />
-        <option value="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/AndroidWebviewPlugin.kt" />
-        <option value="$PROJECT_DIR$/lib/android_webview.dart" />
         <option value="$PROJECT_DIR$/android/build.gradle" />
         <option value="$PROJECT_DIR$/example/lib/main.dart" />
         <option value="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/PictureUtil.kt" />
-        <option value="$PROJECT_DIR$/CHANGELOG.md" />
         <option value="$PROJECT_DIR$/pubspec.yaml" />
+        <option value="$PROJECT_DIR$/CHANGELOG.md" />
+        <option value="$PROJECT_DIR$/lib/android_webview.dart" />
+        <option value="$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/AndroidWebviewPlugin.kt" />
       </list>
     </option>
   </component>
@@ -172,8 +178,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -240,30 +246,6 @@
             <path>
               <item name="android_webview" type="b2602c69:ProjectViewProjectNode" />
               <item name="android_webview" type="462c0819:PsiDirectoryNode" />
-              <item name="android" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="kotlin" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="wttec" type="462c0819:PsiDirectoryNode" />
-              <item name="android_webview" type="462c0819:PsiDirectoryNode" />
-              <item name="internal" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="android_webview" type="b2602c69:ProjectViewProjectNode" />
-              <item name="android_webview" type="462c0819:PsiDirectoryNode" />
-              <item name="android" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="kotlin" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="wttec" type="462c0819:PsiDirectoryNode" />
-              <item name="android_webview" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="android_webview" type="b2602c69:ProjectViewProjectNode" />
-              <item name="android_webview" type="462c0819:PsiDirectoryNode" />
               <item name="example" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -307,7 +289,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -351,8 +333,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49798387" visible="true" weight="0.24964234" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49798387" visible="true" weight="0.24964234" />
       <window_info id="Captures" order="1" side_tool="true" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
@@ -367,12 +350,13 @@
       <window_info anchor="bottom" id="Android Profiler" order="3" show_stripe_button="false" />
       <window_info anchor="bottom" id="Logcat" order="4" weight="0.32970297" />
       <window_info anchor="bottom" id="Debug" order="5" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="6" visible="true" weight="0.41566265" />
+      <window_info anchor="bottom" id="Terminal" order="6" weight="0.41566265" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Flutter Performance" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32970297" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.32891566" />
       <window_info anchor="bottom" id="Find" order="11" weight="0.32891566" />
+      <window_info anchor="right" id="ASM" />
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
       <window_info anchor="right" id="Theme Preview" order="2" />
@@ -425,13 +409,6 @@
     <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/WebViewUtil.kt" />
     <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/ContactsUtil.java" />
     <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/ContactsBean.java" />
-    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/FileUtil.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/event_type.dart" />
     <entry file="file://$PROJECT_DIR$/example/android/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
@@ -477,16 +454,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/FirebaseUtil.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="774">
-          <caret line="47" column="5" selection-start-line="47" selection-start-column="5" selection-end-line="47" selection-end-column="5" />
-          <folding>
-            <element signature="e#41#239#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/FirebaseUtil.kt" />
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -501,20 +469,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/internal/FCMService.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1116">
-          <caret line="76" selection-start-line="76" selection-end-line="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/internal/GIReferrer.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="11" column="54" selection-start-line="11" selection-start-column="46" selection-end-line="11" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/internal/FCMService.kt" />
+    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/internal/GIReferrer.kt" />
     <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/internal/DownLoadReceiver.java" />
     <entry file="file://$PROJECT_DIR$/../../../../soft/flutter/packages/flutter/lib/src/services/platform_channel.dart">
       <provider selected="true" editor-type-id="text-editor">
@@ -531,16 +487,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.metadata">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/android_webview.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="33" column="42" selection-start-line="33" selection-start-column="42" selection-end-line="33" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
@@ -576,16 +522,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/AndroidWebviewPlugin.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2826">
-          <caret line="183" column="22" selection-start-line="183" selection-start-column="22" selection-end-line="183" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#1325#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/../../../../soft/flutter/bin/cache/artifacts/engine/android-arm/flutter.jar!/io/flutter/plugin/common/EventChannel.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1854">
@@ -614,10 +550,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/PictureUtil.kt">
+    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
+        <state relative-caret-position="36">
+          <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -628,10 +564,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/PictureUtil.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="16" column="62" selection-start-line="14" selection-start-column="16" selection-end-line="16" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/FileUtil.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1944">
+          <caret line="119" selection-start-line="119" selection-end-line="119" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CHANGELOG.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
-          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
         </state>
       </provider>
     </entry>
@@ -665,10 +615,30 @@
     <entry file="file://$PROJECT_DIR$/pubspec.lock">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
+    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/utils/PictureFragment.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="40" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="40" />
+        <state relative-caret-position="180">
+          <caret line="11" column="48" selection-start-line="11" selection-start-column="48" selection-end-line="11" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/android_webview.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143">
+          <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/wttec/android_webview/AndroidWebviewPlugin.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="70" selection-start-line="70" selection-end-line="70" />
+          <folding>
+            <element signature="e#0#1325#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
