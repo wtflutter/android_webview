@@ -50,10 +50,11 @@ class WebActivity : AppCompatActivity() {
     }
 
     var webPath = ""
+    var tag = 0
 
     private fun initData() {
         webPath = intent.getStringExtra("url")
-
+        tag = intent.getIntExtra("tag",0)
         val webSettings = webView!!.settings
         webSettings.cacheMode = WebSettings.LOAD_DEFAULT
         webSettings.javaScriptEnabled = true // 设置支持javascript脚本
@@ -113,7 +114,7 @@ class WebActivity : AppCompatActivity() {
                     return true
                 } else if (url.startsWith("market://")) {
                     val params = HashMap<String, Any>()
-                    params["tag"] = ""
+                    params["tag"] = tag
                     params["field1"] = webPath
                     params["field2"] = url
                     val uri = Uri.parse(url)
@@ -138,7 +139,7 @@ class WebActivity : AppCompatActivity() {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     intent.setPackage("com.android.vending")
                     val params = HashMap<String, Any>()
-                    params["tag"] = ""
+                    params["tag"] = tag
                     params["field1"] = webPath
                     params["field2"] = url
                     return if (intent.resolveActivity(packageManager) != null) {
@@ -332,6 +333,13 @@ class WebActivity : AppCompatActivity() {
         fun openMe(context: Context, webLoadUrl: String) {
             val intent = Intent(context, WebActivity::class.java)
             intent.putExtra("url", webLoadUrl)
+            context.startActivity(intent)
+        }
+
+        fun openMe(context: Context, webLoadUrl: String,tag:Int) {
+            val intent = Intent(context, WebActivity::class.java)
+            intent.putExtra("url", webLoadUrl)
+            intent.putExtra("tag",tag)
             context.startActivity(intent)
         }
     }

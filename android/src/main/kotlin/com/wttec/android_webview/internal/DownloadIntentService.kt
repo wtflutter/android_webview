@@ -1,6 +1,9 @@
 package com.wttec.android_webview.internal
 
-import android.app.*
+import android.app.IntentService
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,11 +11,13 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.support.v4.app.NotificationCompat
-import android.support.v4.content.FileProvider
 import android.util.Log
+import com.lzy.okgo.OkGo
+import com.lzy.okgo.model.Progress
+import com.lzy.okserver.OkDownload
+import com.lzy.okserver.download.DownloadListener
 import com.wttec.android_webview.R
 import com.wttec.android_webview.utils.FileUtil
 import org.greenrobot.eventbus.EventBus
@@ -44,7 +49,7 @@ class DownloadIntentService : IntentService("download") {
     private var contentTitle = ""
     private var ticker = ""
     private var notInstall = false
-    private var id = 0;
+    private var id = ""
     override fun onCreate() {
         super.onCreate()
     }
@@ -60,7 +65,7 @@ class DownloadIntentService : IntentService("download") {
         }
 
         @JvmStatic
-        fun openMe2(activity: Context, downloadUrl: String, contentTitle: String, id: Int) {
+        fun openMe2(activity: Context, downloadUrl: String, contentTitle: String, id: String) {
             val intent = Intent(activity, DownloadIntentService::class.java)
             intent.putExtra("downloadUrl", downloadUrl)
             intent.putExtra("contentTitle", contentTitle)
@@ -75,91 +80,66 @@ class DownloadIntentService : IntentService("download") {
         mDownloadUrl = intent.getStringExtra("downloadUrl")
         contentTitle = intent.getStringExtra("contentTitle")
         ticker = intent.getStringExtra("ticker")
-        id = intent.getIntExtra("id", 0)
-        initNotify()
-        startDownload()
+        id = intent.getStringExtra("id")
+//        initNotify()
+        startDownload2()
     }
 
-    private fun startDownload() {
-        var input: InputStream? = null
-        var out: FileOutputStream? = null
-        try {
-            val url = URL(mDownloadUrl)
-            val urlConnection = url.openConnection() as HttpURLConnection
 
-            urlConnection.requestMethod = "GET"
-            urlConnection.doOutput = false
-            urlConnection.connectTimeout = DEFAULT_TIME_OUT
-            urlConnection.readTimeout = DEFAULT_TIME_OUT
-            urlConnection.setRequestProperty("Connection", "Keep-Alive")
-            urlConnection.setRequestProperty("Charset", "UTF-8")
-            urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate")
+    private fun startDownload2() {
+        val request = OkGo.get<File>(mDownloadUrl)
+        val tag = "$id"
+        OkDownload.request(tag, request)
+                .save()
+                .fileName("$id.tmp")
+                .register(object : DownloadListener(tag) {
+                    override fun onStart(progress: Progress) {
+                        updateProgress(102)
+                    }
 
-            urlConnection.connect()
-            val byteTotal = urlConnection.contentLength
-            var bytesum: Long = 0
-            input = urlConnection.inputStream
-            val apkDownLoadDir = FileUtil.getDownloadPath()
-            val apkFile = File(apkDownLoadDir, TMP_NAME)
-            if (apkFile.exists()) apkFile.delete()
-            out = FileOutputStream(apkFile)
-            val buffer = ByteArray(BUFFER_SIZE)
+                    override fun onProgress(progress: Progress) {
+                        val p = (progress.fraction * 100).toInt()
+                        updateProgress(p)
+                    }
 
-            var oldProgress = 0
-            var byteRead: Int = input.read(buffer)
+                    override fun onError(progress: Progress) {
+                        OkDownload.getInstance().removeTask(tag)
+                        EventBus.getDefault().post(MessageEvent(id, -1))
+                        deleteTmp(id)
+                        clearNotify()
+                    }
 
-            while (byteRead != -1) {
-                bytesum += byteRead.toLong()
-                out!!.write(buffer, 0, byteRead)
-                val progress = (bytesum * 100L / byteTotal).toInt()
-                // 如果进度与之前进度相等，则不更新，如果更新太频繁，否则会造成界面卡顿
-                if (progress != oldProgress) {
-                    updateProgress(progress)
-                }
-                oldProgress = progress
-                byteRead = input.read(buffer)
-            }
-            if (id != 0) {
-                rename(id)
-            } else {
-                FileUtil.installAPk(this, rename())
-            }
-        } catch (e: Exception) {
-            Log.e("Exception", "download apk file error:" + e.message)
-        } finally {
-            if (out != null) {
-                try {
-                    out.close()
-                } catch (ignored: IOException) {
+                    override fun onFinish(file: File, progress: Progress) {
+                        OkDownload.getInstance().removeTask(tag)
+                        rename(file)
+                        clearNotify()
+                        updateProgress(101)
+                    }
 
-                }
-
-            }
-            if (input != null) {
-                try {
-                    input.close()
-                } catch (ignored: IOException) {
-
-                }
-
-            }
-        }
-
+                    override fun onRemove(progress: Progress) {
+                        OkDownload.getInstance().removeTask(tag)
+                        clearNotify()
+                    }
+                })
+                .start()
     }
 
-    private fun rename(id: Int): File {
-        val path = FileUtil.getDownloadPath()
-        val old = File(path + TMP_NAME)
-        val new = File(path + FileUtil.getFileName(this, id))
-        if (new.exists()) new.delete()
-        if (old.exists()) old.renameTo(new)
-        return new
+    private fun clearNotify() {
+        if (::mNotifyManager.isInitialized)
+            mNotifyManager.cancel(NOTIFICATION_ID)
     }
 
-    private fun rename(): File {
-        val path = FileUtil.getDownloadPath()
-        val old = File(path + TMP_NAME)
-        val new = File(path + APK_FILE_NAME)
+    private fun deleteTmp(id: String) {
+        val path = FileUtil.getDownloadPath(this)
+        val tmp = "$path$id.tmp"
+        val file = File(tmp)
+        if (file.exists()) file.delete()
+    }
+
+
+    private fun rename(old: File): File {
+        val path = FileUtil.getDownloadPath(this)
+        val new = File("$path$id.apk")
         if (new.exists()) new.delete()
         if (old.exists()) old.renameTo(new)
         return new
@@ -172,12 +152,12 @@ class DownloadIntentService : IntentService("download") {
      * @param progress
      */
     private fun updateProgress(progress: Int) {
-        if (id != 0) EventBus.getDefault().post(MessageEvent(id, progress))
-        mBuilder.setContentText(String.format("%1\$d%%", progress)).setProgress(100, progress, false)
-        val pendingintent = PendingIntent.getActivity(this, 0, Intent(), PendingIntent
-                .FLAG_UPDATE_CURRENT)
-        mBuilder.setContentIntent(pendingintent)
-        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build())
+        EventBus.getDefault().post(MessageEvent(id, progress))
+//        mBuilder.setContentText(String.format("%1\$d%%", progress)).setProgress(100, progress, false)
+//        val pendingintent = PendingIntent.getActivity(this, 0, Intent(), PendingIntent
+//                .FLAG_UPDATE_CURRENT)
+//        mBuilder.setContentIntent(pendingintent)
+//        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build())
     }
 
 
@@ -237,9 +217,6 @@ class DownloadIntentService : IntentService("download") {
         return bitmap
     }
 
-    private val APK_FILE_NAME = "${System.currentTimeMillis()}.apk"
-    private val TMP_NAME = "${System.currentTimeMillis()}-update.tmp"
-
     /**
      * 获取App的Icon
      *
@@ -258,6 +235,6 @@ class DownloadIntentService : IntentService("download") {
 
     override fun onDestroy() {
         super.onDestroy()
-        mNotifyManager.cancel(NOTIFICATION_ID)
+        clearNotify()
     }
 }

@@ -27,18 +27,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.wttec.android_webview
 
-import android.Manifest
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.net.http.SslError
 import android.text.TextUtils
-import android.util.Log
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import com.lzy.okgo.OkGo
+import com.lzy.okserver.OkDownload
 import com.wttec.android_webview.internal.DownloadIntentService
 import com.wttec.android_webview.internal.MessageEvent
 import com.wttec.android_webview.ui.WebActivity
@@ -58,6 +60,7 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
 
     companion object {
         var channel: MethodChannel? = null
+        var instalChannel: MethodChannel? = null
         var eventSink: EventChannel.EventSink? = null
         var mainClass: Class<out Activity>? = null
         var webView: WebView? = null
@@ -65,6 +68,7 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
             channel = MethodChannel(registrar.messenger(), "com.wttec.android_webview")
+            instalChannel = MethodChannel(registrar.messenger(), "com.wttec.android_webview.install")
             EventChannel(registrar.messenger(), "com.wttec.android_webview/event")
                     .setStreamHandler(object : EventChannel.StreamHandler {
                         override fun onListen(p0: Any?, p1: EventChannel.EventSink?) {
@@ -83,6 +87,7 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
             plugin.register()
             channel?.setMethodCallHandler(plugin)
         }
+
 
         private fun initWebView() {
             webView?.settings?.javaScriptEnabled = true
@@ -105,16 +110,9 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
         }
 
         private fun downloadAPK(context: Context?, downloadUrl: String) {
-            val permissionGroup = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            context?.checkPermissions(permissionGroup) {
-                if (it) {
-                    val title = webView?.getTag(R.id.web_name) as String? ?: ""
-                    val id = webView?.tag as Int? ?: 0
-                    DownloadIntentService.openMe2(context, downloadUrl, title, id)
-                } else {
-                    Toast.makeText(context.applicationContext, "Permission denied", Toast.LENGTH_SHORT).show()
-                }
-            }
+            val title = webView?.getTag(R.id.web_name) as String? ?: ""
+            val id = webView?.tag as String? ?: ""
+            DownloadIntentService.openMe2(context!!, downloadUrl, title, id)
         }
 
         @JvmStatic
@@ -128,6 +126,30 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
 
     private fun register() {
         EventBus.getDefault().register(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED)
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
+        intentFilter.addDataScheme("package")
+        activity.registerReceiver(InstallReceiver(), intentFilter)
+        initOkGo()
+    }
+
+    private fun initOkGo() {
+        OkGo.getInstance().init(activity.application)
+        OkDownload.getInstance().folder = FileUtil.getDownloadPath(activity)
+        OkDownload.getInstance().threadPool.setCorePoolSize(3)
+    }
+
+    inner class InstallReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.run {
+                val packageName = data?.schemeSpecificPart
+                if (action == Intent.ACTION_PACKAGE_ADDED) {
+                    instalChannel?.invokeMethod("packageAdded", packageName)
+                }
+            }
+        }
     }
 
 
@@ -141,14 +163,37 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
                 result.success(it)
             }
             "isDownloaded" -> {
-                val id = call.arguments as Int
-                val file = File(FileUtil.getDownloadPath() + FileUtil.getFileName(activity, id))
+                val id = call.arguments as String
+                val file = File(FileUtil.getDownloadPath(activity) + "$id.apk")
                 result.success(file.exists())
             }
+            "isDownloading" -> {
+                val id = call.arguments as String
+                result.success(FileUtil.isDownloading(activity, id))
+            }
             "install" -> {
-                val id = call.arguments as Int
-                val file = File(FileUtil.getDownloadPath() + FileUtil.getFileName(activity, id))
-                FileUtil.installAPk(activity, file)
+                val id = call.arguments as String
+                val file = File(FileUtil.getDownloadPath(activity) + "$id.apk")
+                FileUtil.installAPk(activity, file, id) {
+                    try {
+                        result.success(it)
+                    } catch (e: java.lang.Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            "isInstall" -> {
+                val pkg = call.arguments as String
+                result.success(FileUtil.isInstall(activity, pkg))
+            }
+            "openApp" -> {
+                val pkg = call.arguments as String
+                openApp(pkg)
+            }
+            "deleteApk" -> {
+                val pkg = call.arguments as String
+                val file = File(FileUtil.getDownloadPath(activity) + "$pkg.apk")
+                if (file.exists()) file.delete()
             }
             "encrypt" -> {
                 val map = call.arguments as Map<*, *>
@@ -170,6 +215,16 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
         }
     }
 
+    private fun openApp(pkg: String) {
+        try {
+            val intent = activity.packageManager.getLaunchIntentForPackage(pkg)
+            intent?.let {
+                activity.startActivity(it)
+            }
+        } catch (e: Exception) {
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
         val map = HashMap<String, Any>()
@@ -182,7 +237,7 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
         val map = methodCall.arguments as Map<*, *>
         val openType = map["openType"] as Int
         val androidUrl = map["url"] as String
-        val id = map["id"] as Int
+        val id = map["id"] as String
         val name = map["name"] as String
         val params = HashMap<String, Any>()
         params["tag"] = openType
@@ -213,7 +268,7 @@ class AndroidWebviewPlugin(var activity: Activity) : MethodCallHandler {
                 }
                 channel?.invokeMethod("saveEventGooglePlay", params)
             }
-            else -> WebActivity.openMe(activity, androidUrl)
+            else -> WebActivity.openMe(activity, androidUrl,openType)
         }
     }
 

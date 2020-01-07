@@ -1,32 +1,41 @@
 package com.wttec.android_webview.utils
 
-import android.os.Environment
-import java.io.File
-import android.os.Build
-import android.provider.MediaStore
-import android.provider.DocumentsContract
-import android.content.ContentUris
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.support.v4.content.FileProvider
+import java.io.File
 
 
 object FileUtil {
 
 
-    fun getDownloadPath(): String {
-        return Environment.getExternalStorageDirectory().absolutePath + "/Download/"
+    fun getDownloadPath(context: Context): String {
+        val path = "${context.cacheDir.absolutePath}/apks/"
+        val file = File(path)
+        if (!file.exists()) file.mkdirs()
+        return path
     }
 
     fun getFileName(context: Context, id: Int): String {
         return "${MD5.encode(context.packageName)}-$id.apk"
     }
 
+    fun isDownloading(context: Context, id: String): Boolean {
+        val file = "${getDownloadPath(context)}$id.tmp"
+        return File(file).exists()
+    }
 
-    fun installAPk(context: Context, file: File) {
+
+    fun installAPk(context: Activity, file: File, pkgName: String, callback: (Boolean) -> Unit) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
@@ -38,7 +47,42 @@ object FileUtil {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive")
         }
-        context.startActivity(intent)
+        val f = getFragment(context)
+        f.callback = callback
+        f.pkgName = pkgName
+        f.lastTime = System.currentTimeMillis()
+        f.startActivityForResult(intent, 201)
+//        context.startActivity(intent)
+    }
+
+    private fun removeFragment(f: InstallFragment, activity: Activity) {
+        activity.fragmentManager.apply {
+            beginTransaction().remove(f).commitAllowingStateLoss()
+            executePendingTransactions()
+        }
+    }
+
+    private fun getFragment(activity: Activity): InstallFragment {
+        var fragment = activity.fragmentManager.findFragmentByTag("install")
+        if (fragment is InstallFragment) {
+
+        } else {
+            fragment = InstallFragment()
+            activity.fragmentManager.apply {
+                beginTransaction().add(fragment, "install").commitAllowingStateLoss()
+                executePendingTransactions()
+            }
+        }
+        return fragment
+    }
+
+    fun isInstall(context: Context, pkg: String): Boolean {
+        return try {
+            val info = context.packageManager.getApplicationInfo(pkg, 0)
+            true
+        } catch (e: java.lang.Exception) {
+            false
+        }
     }
 
     /**

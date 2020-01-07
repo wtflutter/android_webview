@@ -23,14 +23,8 @@ class _MyAppState extends State<MyApp> {
     eventChannel.receiveBroadcastStream().listen((obj) {
       print("event:$obj");
     });
-    _saveToken();
   }
 
-  void _saveToken() async {
-    var token = await AndroidWebview.tokenMap;
-    print("-------token---------");
-    print(token);
-  }
 
   void initCallback() {
     AndroidWebview.setHandler((MethodCall method) async {
@@ -88,8 +82,7 @@ class _MyAppState extends State<MyApp> {
               padding: EdgeInsets.all(30),
               child: GestureDetector(
                 onTap: () async {
-                  var token = await AndroidWebview.tokenMap;
-                  print("token:$token");
+
                 },
                 child: Container(
                   height: 44,
@@ -105,7 +98,7 @@ class _MyAppState extends State<MyApp> {
               padding: EdgeInsets.all(30),
               child: GestureDetector(
                 onTap: () async {
-                  await AndroidWebview.toWeb("豌豆荚", 4, 1, "https://ucan.25pp.com/Wandoujia_web_seo_baidu_homepage.apk");
+
                 },
                 child: Container(
                   height: 44,

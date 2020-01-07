@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 class AndroidWebview {
   static const MethodChannel _channel = const MethodChannel('com.wttec.android_webview');
+  static const MethodChannel _installChannel = const MethodChannel('com.wttec.android_webview.install');
   static const EventChannel eventChannel = const EventChannel("com.wttec.android_webview/event");
 
   static Future<String> get platformVersion async {
@@ -19,7 +20,7 @@ class AndroidWebview {
     return _channel.invokeMethod("logout");
   }
 
-  static void toWeb(String name, int type, int id, String url) {
+  static void toWeb(String name, int type, String id, String url) {
     _channel.invokeMethod("toWeb", {"url": url, "openType": type, "name": name, "id": id});
   }
 
@@ -58,16 +59,37 @@ class AndroidWebview {
     return result;
   }
 
-  static Future<bool> isDownloaded(int id) async {
+  static Future<bool> isDownloaded(String id) async {
     final bool result = await _channel.invokeMethod("isDownloaded", id);
     return result;
   }
 
-  static void install(int id) {
-    _channel.invokeMethod("install", id);
+  static Future<bool> isDownloading(String id) {
+    return _channel.invokeMethod("isDownloading", id);
+  }
+
+  static Future<bool> isInstall(String pkg) {
+    return _channel.invokeMethod("isInstall", pkg);
+  }
+
+  static Future<bool> install(String id) {
+    return _channel.invokeMethod("install", id);
+  }
+
+  static void openApp(String package) {
+    _channel.invokeMethod("openApp", package);
   }
 
   static void setHandler(Future<dynamic> handler(MethodCall call)) {
     _channel.setMethodCallHandler(handler);
+  }
+
+  static void listenInstall(handler(String pkg)) {
+    _installChannel.setMethodCallHandler((MethodCall call) async {
+      if (call.method == "packageAdded") {
+        handler(call.arguments);
+        _channel.invokeMethod("deleteApk", call.arguments);
+      }
+    });
   }
 }
